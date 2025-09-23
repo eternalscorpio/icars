@@ -1,0 +1,49 @@
+<!-- apps/bookings/templates/bookings/booking_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Bookings</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Booking List</h4>
+        </div>
+        <div class="card-body">
+            {% if bookings %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Vehicle</th>
+                            <th>Scheduled Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.service.name }}</td>  <!-- Updated -->
+                                <td>{{ booking.vehicle }}</td>
+                                <td>{{ booking.scheduled_date|date:"F j, Y, g:i a" }}</td>
+                                <td>{{ booking.get_status_display }}</td>
+                                <td>
+                                    <a href="{% url 'bookings:booking_detail' booking.pk %}" class="btn btn-sm btn-info">View</a>
+                                    {% if booking.status == booking.STATUS_PENDING %}
+                                        <a href="{% url 'bookings:booking_update' booking.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No bookings yet.</p>
+            {% endif %}
+            <a href="{% url 'bookings:booking_create' %}" class="btn btn-success">Create New Booking</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

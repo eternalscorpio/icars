@@ -1,0 +1,37 @@
+<!-- apps/bookings/templates/bookings/booking_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}Booking Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Booking Details</h2>
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h4>{{ booking.service.name }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Vehicle:</strong> {{ booking.vehicle }}</p>
+            <p><strong>Scheduled Date:</strong> {{ booking.scheduled_date|date:"F j, Y, g:i a" }}</p>
+            <p><strong>Status:</strong> {{ booking.get_status_display }}</p>
+            <p><strong>Assigned Staff:</strong> {{ booking.assigned_staff|default:"Not assigned" }}</p>
+            <p><strong>Notes:</strong> {{ booking.notes|default:"None" }}</p>
+            <p><strong>Created At:</strong> {{ booking.created_at|date:"F j, Y" }}</p>
+            <a href="{% url 'bookings:booking_list' %}" class="btn btn-primary">Back to Bookings</a>
+            {% if booking.status == booking.STATUS_PENDING %}
+                <a href="{% url 'bookings:booking_update' booking.pk %}" class="btn btn-warning">Edit Booking</a>
+            {% endif %}
+            {% if booking.status == booking.STATUS_COMPLETED and not booking.feedback_submitted %}
+                <a href="{% url 'bookings:feedback_create' booking.pk %}" class="btn btn-info">Submit Feedback</a>
+            {% endif %}
+            {% if booking.feedback %}
+                <div class="mt-3">
+                    <h5>Feedback Submitted</h5>
+                    <p><strong>Rating:</strong> {{ booking.feedback.rating }} Stars</p>
+                    <p><strong>Comments:</strong> {{ booking.feedback.comments|default:"No comments" }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

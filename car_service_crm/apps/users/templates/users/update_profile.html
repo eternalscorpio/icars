@@ -1,0 +1,61 @@
+<!-- apps/users/templates/users/update_profile.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white text-center">
+                    <h4>Update Your Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="id_first_name">First Name:</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="id_last_name">Last Name:</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_email">Email:</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_phone_number">Phone Number:</label>
+                            {{ form.phone_number }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_address">Address:</label>
+                            {{ form.address }}
+                        </div>
+                        {% if request.user.is_staff_member or request.user.is_admin %}
+                            <div class="form-group mb-3">
+                                <label for="id_specialization">Specialization:</label>
+                                {{ form.specialization }}
+                            </div>
+                        {% endif %}
+                        <!-- Role is not editable by users -->
+                        <button type="submit" class="btn btn-warning btn-block">Save Changes</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'profile' %}" class="btn btn-secondary">Back to Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

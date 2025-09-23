@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Admin Dashboard</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Customer Management</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'admin:customers_customer_changelist' %}" class="btn btn-primary">Manage Customers</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Service Management</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'staff:services' %}" class="btn btn-primary">Manage Services</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Staff Management</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'staff:staff_management' %}" class="btn btn-primary">Manage Staff</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Analytics</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'staff:analytics_dashboard' %}" class="btn btn-primary">View Reports</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Communication</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'staff:communication_dashboard' %}" class="btn btn-primary">Manage Communication</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Bookings</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'admin:bookings_booking_changelist' %}" class="btn btn-primary">Manage Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h4>Recent Bookings</h4>
+        </div>
+        <div class="card-body">
+            {% if recent_bookings %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Scheduled</th>
+                            <th>Status</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in recent_bookings %}
+                            <tr>
+                                <td>{{ booking.service.name }}</td>
+                                <td>{{ booking.customer.get_full_name }}</td>
+                                <td>{{ booking.vehicle }}</td>
+                                <td>{{ booking.scheduled_date|date:"Y-m-d H:i" }}</td>
+                                <td>{{ booking.get_status_display }}</td>
+                                <td>{{ booking.assigned_staff|default:"Unassigned" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No recent bookings.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

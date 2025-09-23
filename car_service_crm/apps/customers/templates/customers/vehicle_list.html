@@ -1,0 +1,49 @@
+<!-- apps/customers/templates/customers/vehicle_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}My Vehicles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Vehicles</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Vehicle List</h4>
+        </div>
+        <div class="card-body">
+            {% if vehicles %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Make</th>
+                            <th>Model</th>
+                            <th>Year</th>
+                            <th>License Plate</th>
+                            <th>VIN</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vehicle in vehicles %}
+                            <tr>
+                                <td>{{ vehicle.make }}</td>
+                                <td>{{ vehicle.model }}</td>
+                                <td>{{ vehicle.year }}</td>
+                                <td>{{ vehicle.license_plate }}</td>
+                                <td>{{ vehicle.vin }}</td>
+                                <td>
+                                    <a href="{% url 'customers:vehicle_update' vehicle.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No vehicles registered yet.</p>
+            {% endif %}
+            <a href="{% url 'customers:vehicle_create' %}" class="btn btn-success">Add New Vehicle</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

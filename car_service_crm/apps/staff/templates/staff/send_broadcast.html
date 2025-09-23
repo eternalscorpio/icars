@@ -1,0 +1,26 @@
+<!-- apps/staff/templates/staff/send_broadcast.html -->
+{% extends 'base.html' %}
+
+{% block title %}Send Broadcast Message{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Send Broadcast Message</h2>
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4>Broadcast Details</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="message">Message:</label>
+                    <textarea name="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Send Broadcast</button>
+                <a href="{% url 'staff:communication_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!-- apps/staff/templates/staff/staff_booking_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Assigned Bookings{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Assigned Bookings</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Booking List</h4>
+        </div>
+        <div class="card-body">
+            {% if bookings %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Scheduled Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.service.name }}</td>  <!-- Updated -->
+                                <td>{{ booking.customer.get_full_name }}</td>
+                                <td>{{ booking.vehicle }}</td>
+                                <td>{{ booking.scheduled_date|date:"F j, Y, g:i a" }}</td>
+                                <td>{{ booking.get_status_display }}</td>
+                                <td>
+                                    <a href="{% url 'staff:staff_booking_update' booking.pk %}" class="btn btn-sm btn-warning">Update</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No assigned bookings.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!-- apps/staff/templates/staff/generate_reports.html -->
+{% extends 'base.html' %}
+
+{% block title %}Generate Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Generate Reports</h2>
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4>Generate Monthly Reports</h4>
+        </div>
+        <div class="card-body">
+            <p>This will generate reports for the current month. Click to proceed.</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Generate Reports</button>
+                <a href="{% url 'staff:analytics_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

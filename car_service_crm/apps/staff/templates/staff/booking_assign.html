@@ -1,0 +1,29 @@
+<!-- apps/staff/templates/staff/booking_assign.html -->
+{% extends 'base.html' %}
+
+{% block title %}Assign Staff to Booking{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Assign Staff to {{ object.service.name }}</h2>  <!-- Updated -->
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4>Booking Details</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Customer:</strong> {{ object.customer.get_full_name }}</p>
+            <p><strong>Vehicle:</strong> {{ object.vehicle }}</p>
+            <p><strong>Scheduled Date:</strong> {{ object.scheduled_date|date:"F j, Y, g:i a" }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="id_assigned_staff">Assign Staff:</label>
+                    {{ form.assigned_staff }}
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+                <a href="{% url 'staff:booking_management' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

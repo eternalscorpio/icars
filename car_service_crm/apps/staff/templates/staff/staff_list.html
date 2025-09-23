@@ -1,0 +1,46 @@
+<!-- apps/staff/templates/staff/staff_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Staff Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Staff Management</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Staff List</h4>
+        </div>
+        <div class="card-body">
+            {% if staff %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Specialization</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in staff %}
+                            <tr>
+                                <td>{{ member.get_full_name }}</td>
+                                <td>{{ member.email }}</td>
+                                <td>{{ member.specialization|default:"N/A" }}</td>
+                                <td>{{ member.phone_number|default:"N/A" }}</td>
+                                <td>
+                                    <a href="{% url 'admin:users_user_change' member.pk %}" class="btn btn-sm btn-warning">Edit in Admin</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No staff members found.</p>
+            {% endif %}
+            <a href="{% url 'admin:users_user_add' %}" class="btn btn-success">Add Staff in Admin</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

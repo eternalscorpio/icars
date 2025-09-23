@@ -1,0 +1,80 @@
+<!-- apps/staff/templates/staff/communication_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Communication Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Communication Dashboard</h2>
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{% url 'staff:notification_template_create' %}" class="btn btn-success">Create Template</a>
+            <a href="{% url 'staff:send_broadcast' %}" class="btn btn-primary">Send Broadcast</a>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Notification Templates</h4>
+        </div>
+        <div class="card-body">
+            {% if templates %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Active</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for template in templates %}
+                            <tr>
+                                <td>{{ template.name }}</td>
+                                <td>{{ template.subject }}</td>
+                                <td>{{ template.is_active|yesno:"Yes,No" }}</td>
+                                <td>{{ template.created_at|date:"Y-m-d" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No templates available. Create one!</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Communication Logs</h4>
+        </div>
+        <div class="card-body">
+            {% if logs %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Recipient</th>
+                            <th>Booking</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Sent At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <td>{{ log.recipient.get_full_name }}</td>
+                                <td>{{ log.booking|default:"N/A" }}</td>
+                                <td>{{ log.message_type }}</td>
+                                <td>{{ log.status }}</td>
+                                <td>{{ log.sent_at|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No communication logs available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

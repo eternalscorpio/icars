@@ -1,0 +1,64 @@
+<!-- apps/users/templates/users/register.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h4>Create a New Account</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="id_first_name">First Name:</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="id_last_name">Last Name:</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_email">Email:</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_phone_number">Phone Number:</label>
+                            {{ form.phone_number }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_address">Address:</label>
+                            {{ form.address }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_password1">Password:</label>
+                            {{ form.password1 }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_password2">Confirm Password:</label>
+                            {{ form.password2 }}
+                        </div>
+                        <!-- Role selection: But since self-registration is for customers only, it could be hidden or fixed -->
+                        <input type="hidden" name="role" value="CUSTOMER">
+                        <button type="submit" class="btn btn-success btn-block">Register</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p>Already have an account? <a href="{% url 'users:login' %}">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

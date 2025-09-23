@@ -1,0 +1,75 @@
+<!-- apps/staff/templates/staff/analytics_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Analytics Dashboard</h2>
+    <a href="{% url 'staff:generate_reports' %}" class="btn btn-success mb-3">Generate New Reports</a>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Revenue Reports</h4>
+        </div>
+        <div class="card-body">
+            {% if revenue_reports %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Revenue</th>
+                            <th>Total Bookings</th>
+                            <th>Average Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in revenue_reports %}
+                            <tr>
+                                <td>{{ report.month|date:"Y-m" }}</td>
+                                <td>${{ report.total_revenue }}</td>
+                                <td>{{ report.total_bookings }}</td>
+                                <td>{{ report.average_rating|floatformat:1 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No revenue reports available. Generate one!</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Staff Performance</h4>
+        </div>
+        <div class="card-body">
+            {% if staff_performances %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Staff</th>
+                            <th>Month</th>
+                            <th>Completed Bookings</th>
+                            <th>Total Revenue</th>
+                            <th>Average Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for performance in staff_performances %}
+                            <tr>
+                                <td>{{ performance.staff.get_full_name }}</td>
+                                <td>{{ performance.month|date:"Y-m" }}</td>
+                                <td>{{ performance.completed_bookings }}</td>
+                                <td>${{ performance.total_revenue }}</td>
+                                <td>{{ performance.average_rating|floatformat:1 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No staff performance reports available. Generate one!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

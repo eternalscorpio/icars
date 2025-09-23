@@ -1,0 +1,39 @@
+<!-- apps/users/templates/users/profile.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white text-center">
+                    <h4>{{ profile_user.get_full_name }}'s Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{% if profile_user.profile_picture %}{{ profile_user.profile_picture.url }}{% else %}https://via.placeholder.com/150{% endif %}" alt="Profile Picture" class="img-fluid rounded-circle mb-3">
+                        </div>
+                        <div class="col-md-8">
+                            <p><strong>Email:</strong> {{ profile_user.email }}</p>
+                            <p><strong>Role:</strong> {{ profile_user.get_role_display }}</p>
+                            <p><strong>Phone Number:</strong> {{ profile_user.phone_number|default:"Not provided" }}</p>
+                            <p><strong>Address:</strong> {{ profile_user.address|default:"Not provided" }}</p>
+                            {% if profile_user.is_staff_member %}
+                                <p><strong>Specialization:</strong> {{ profile_user.specialization|default:"Not specified" }}</p>
+                            {% endif %}
+                            <p><strong>Date Joined:</strong> {{ profile_user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'update_profile' %}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

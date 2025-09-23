@@ -1,0 +1,45 @@
+<!-- apps/staff/templates/staff/service_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Service Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Service Management</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Service List</h4>
+        </div>
+        <div class="card-body">
+            {% if services %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                            <tr>
+                                <td>{{ service.name }}</td>
+                                <td>${{ service.price }}</td>
+                                <td>{{ service.duration }}</td>
+                                <td>
+                                    <a href="{% url 'staff:service_update' service.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{% url 'admin:services_service_change' service.pk %}" class="btn btn-sm btn-info">Edit in Admin</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No services found.</p>
+            {% endif %}
+            <a href="{% url 'staff:service_create' %}" class="btn btn-success">Add New Service</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

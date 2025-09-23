@@ -1,0 +1,50 @@
+<!-- apps/staff/templates/staff/booking_management.html -->
+{% extends 'base.html' %}
+
+{% block title %}Booking Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Booking Management</h2>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>All Bookings</h4>
+        </div>
+        <div class="card-body">
+            {% if bookings %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Scheduled Date</th>
+                            <th>Status</th>
+                            <th>Assigned Staff</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.service.name }}</td>  <!-- Updated -->
+                                <td>{{ booking.customer.get_full_name }}</td>
+                                <td>{{ booking.vehicle }}</td>
+                                <td>{{ booking.scheduled_date|date:"F j, Y, g:i a" }}</td>
+                                <td>{{ booking.get_status_display }}</td>
+                                <td>{{ booking.assigned_staff|default:"Not assigned" }}</td>
+                                <td>
+                                    <a href="{% url 'staff:booking_assign' booking.pk %}" class="btn btn-sm btn-info">Assign Staff</a>
+                                    <a href="{% url 'admin:bookings_booking_change' booking.pk %}" class="btn btn-sm btn-warning">Edit in Admin</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No bookings found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
