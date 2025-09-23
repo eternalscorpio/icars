@@ -8,24 +8,30 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import Vehicle
 from .forms import VehicleForm
-from apps.bookings.models import Booking,Feedback
+from apps.bookings.models import Booking
 
 class CustomerDashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Dashboard for Customer role, showing overview of vehicles and upcoming bookings.
+    """
     template_name = 'customers/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bookings_count'] = Booking.objects.filter(customer=self.request.user).count()
-        context['vehicles_count'] = Vehicle.objects.filter(customer=self.request.user).count()
-        context['feedback_count'] = Feedback.objects.filter(booking__customer=self.request.user).count()
-        context['recent_bookings'] = Booking.objects.filter(customer=self.request.user)[:5]
+        if self.request.user.is_customer:
+            context['vehicles'] = self.request.user.vehicles.all()
+            # Placeholder for bookings, to be implemented in bookings app
+            context['upcoming_bookings'] = Booking.objects.filter(
+                customer=self.request.user,
+                status__in=[Booking.STATUS_PENDING, Booking.STATUS_IN_PROGRESS]
+            ).order_by('scheduled_date')[:5] #show upto 5 upcoming bookings
         return context
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_customer:
-            return redirect('users:home')
+            return redirect('users:home')  # Redirect non-customers
         return super().dispatch(request, *args, **kwargs)
-    
+
 class VehicleListView(LoginRequiredMixin, ListView):
     """
     List all vehicles for the logged-in customer.

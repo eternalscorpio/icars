@@ -1,85 +1,57 @@
+<!-- apps/customers/templates/customers/dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Customer Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Customer Dashboard</h2>
+    <h2>Welcome, {{ user.get_full_name }}</h2>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>My Bookings</h4>
-                </div>
-                <div class="card-body">
-                    <p>{{ bookings_count }} active bookings</p>
-                    <a href="{% url 'bookings:booking_list' %}" class="btn btn-primary">View Bookings</a>
-                    <a href="{% url 'bookings:booking_create' %}" class="btn btn-success">New Booking</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-info text-white">
                     <h4>My Vehicles</h4>
                 </div>
                 <div class="card-body">
-                    <p>{{ vehicles_count }} vehicles registered</p>
-                    <a href="{% url 'customers:vehicle_list' %}" class="btn btn-primary">Manage Vehicles</a>
+                    {% if vehicles %}
+                        <ul class="list-group">
+                            {% for vehicle in vehicles %}
+                                <li class="list-group-item">
+                                    {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.license_plate }})
+                                    <a href="{% url 'customers:vehicle_update' vehicle.pk %}" class="btn btn-sm btn-warning float-end">Edit</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No vehicles registered yet.</p>
+                    {% endif %}
+                    <a href="{% url 'customers:vehicle_create' %}" class="btn btn-success mt-3">Add Vehicle</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Feedback</h4>
+                <div class="card-header bg-info text-white">
+                    <h4>Upcoming Bookings</h4>
                 </div>
                 <div class="card-body">
-                    <p>Submitted: {{ feedback_count }} feedbacks</p>
-                    <a href="{% url 'bookings:booking_list' %}" class="btn btn-primary">Provide Feedback</a>
+                    {% if upcoming_bookings %}
+                        <ul class="list-group">
+                            {% for booking in upcoming_bookings %}
+                                <li class="list-group-item">
+                                    {{ booking.service.name }} for {{ booking.vehicle }} on {{ booking.scheduled_date|date:"F j, Y, g:i a" }}  <!-- Updated -->
+                                    <span class="badge bg-{% if booking.status == booking.STATUS_PENDING %}warning{% else %}success{% endif %} float-end">
+                                        {{ booking.get_status_display }}
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming bookings.</p>
+                    {% endif %}
+                    <a href="{% url 'bookings:booking_create' %}" class="btn btn-success mt-3">Create Booking</a>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="card shadow">
-        <div class="card-header bg-info text-white">
-            <h4>Recent Bookings</h4>
-        </div>
-        <div class="card-body">
-            {% if recent_bookings %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Vehicle</th>
-                            <th>Scheduled</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for booking in recent_bookings %}
-                            <tr>
-                                <td>{{ booking.service.name }}</td>
-                                <td>{{ booking.vehicle }}</td>
-                                <td>{{ booking.scheduled_date|date:"Y-m-d H:i" }}</td>
-                                <td>{{ booking.get_status_display }}</td>
-                                <td>
-                                    <a href="{% url 'bookings:booking_detail' booking.pk %}" class="btn btn-sm btn-info">View</a>
-                                    {% if booking.status == booking.STATUS_PENDING %}
-                                        <a href="{% url 'bookings:booking_update' booking.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                                    {% endif %}
-                                    {% if booking.status == booking.STATUS_COMPLETED and not booking.feedback_submitted %}
-                                        <a href="{% url 'bookings:feedback_create' booking.pk %}" class="btn btn-sm btn-success">Feedback</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No recent bookings.</p>
-            {% endif %}
         </div>
     </div>
 </div>

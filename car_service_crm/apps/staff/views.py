@@ -107,25 +107,26 @@ class BookingAssignStaffView(LoginRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
 class StaffDashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Staff dashboard showing assigned bookings and workload.
+    """
     template_name = 'staff/staff_dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = datetime.now().date()
-        context['today_bookings_count'] = Booking.objects.filter(
-            assigned_staff=self.request.user, scheduled_date__date=today
-        ).count()
-        context['completed_bookings_count'] = Booking.objects.filter(
-            assigned_staff=self.request.user, status=Booking.STATUS_COMPLETED
-        ).count()
-        context['average_rating'] = Booking.objects.filter(
-            assigned_staff=self.request.user, status=Booking.STATUS_COMPLETED
-        ).aggregate(Avg('feedback__rating'))['feedback__rating__avg'] or 0
-        context['assigned_bookings'] = Booking.objects.filter(assigned_staff=self.request.user)[:5]
+        if self.request.user.is_staff_member:
+            context['assigned_bookings'] = Booking.objects.filter(
+                assigned_staff=self.request.user,
+                status__in=[Booking.STATUS_PENDING, Booking.STATUS_IN_PROGRESS]
+            ).order_by('scheduled_date')[:5]
+            context['completed_bookings'] = Booking.objects.filter(
+                assigned_staff=self.request.user,
+                status=Booking.STATUS_COMPLETED
+            ).count()
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
+        if not request.user.is_staff_member:
             return redirect('users:home')
         return super().dispatch(request, *args, **kwargs)
 

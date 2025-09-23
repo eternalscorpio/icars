@@ -1,79 +1,47 @@
+<!-- apps/staff/templates/staff/staff_dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Staff Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Staff Dashboard</h2>
+    <h2>Welcome, {{ user.get_full_name }}</h2>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Today's Bookings</h4>
+                <div class="card-header bg-info text-white">
+                    <h4>Assigned Bookings</h4>
                 </div>
                 <div class="card-body">
-                    <p>{{ today_bookings_count }} bookings assigned</p>
-                    <a href="{% url 'staff:staff_bookings' %}" class="btn btn-primary">View Bookings</a>
+                    {% if assigned_bookings %}
+                        <ul class="list-group">
+                            {% for booking in assigned_bookings %}
+                                <li class="list-group-item">
+                                    {{ booking.service.name }} for {{ booking.vehicle }} on {{ booking.scheduled_date|date:"F j, Y, g:i a" }}  <!-- Updated -->
+                                    <span class="badge bg-{% if booking.status == booking.STATUS_PENDING %}warning{% else %}success{% endif %} float-end">
+                                        {{ booking.get_status_display }}
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No assigned bookings.</p>
+                    {% endif %}
+                    <a href="{% url 'staff:staff_booking_list' %}" class="btn btn-primary mt-3">View All Bookings</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Services</h4>
-                </div>
-                <div class="card-body">
-                    <a href="{% url 'staff:services' %}" class="btn btn-primary">View Services</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-info text-white">
                     <h4>Performance</h4>
                 </div>
                 <div class="card-body">
-                    <p>Completed: {{ completed_bookings_count }} bookings</p>
-                    <p>Average Rating: {{ average_rating|floatformat:1 }}</p>
+                    <p>Completed Bookings: {{ completed_bookings }}</p>
+                    <!-- Placeholder for future feedback or performance metrics -->
+                    <p>Feedback: Coming soon!</p>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="card shadow">
-        <div class="card-header bg-info text-white">
-            <h4>Assigned Bookings</h4>
-        </div>
-        <div class="card-body">
-            {% if assigned_bookings %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Customer</th>
-                            <th>Vehicle</th>
-                            <th>Scheduled</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for booking in assigned_bookings %}
-                            <tr>
-                                <td>{{ booking.service.name }}</td>
-                                <td>{{ booking.customer.get_full_name }}</td>
-                                <td>{{ booking.vehicle }}</td>
-                                <td>{{ booking.scheduled_date|date:"Y-m-d H:i" }}</td>
-                                <td>{{ booking.get_status_display }}</td>
-                                <td>
-                                    <a href="{% url 'staff:staff_booking_update' booking.pk %}" class="btn btn-sm btn-warning">Update</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No assigned bookings.</p>
-            {% endif %}
         </div>
     </div>
 </div>

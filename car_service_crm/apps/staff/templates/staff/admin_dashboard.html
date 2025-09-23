@@ -1,38 +1,64 @@
+<!-- apps/staff/templates/staff/admin_dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Admin Dashboard</h2>
+    <h2>Admin Dashboard</h2>
     <div class="row">
         <div class="col-md-3">
             <div class="card shadow mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h4>Customer Management</h4>
+                    <h4>Customers</h4>
                 </div>
                 <div class="card-body">
-                    <a href="{% url 'admin:customers_customer_changelist' %}" class="btn btn-primary">Manage Customers</a>
+                    <p>Total: {{ total_customers }}</p>
+                    <a href="{% url 'staff:customer_management' %}" class="btn btn-primary">Manage Customers</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card shadow mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h4>Service Management</h4>
+                    <h4>Staff</h4>
                 </div>
                 <div class="card-body">
-                    <a href="{% url 'staff:services' %}" class="btn btn-primary">Manage Services</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Staff Management</h4>
-                </div>
-                <div class="card-body">
+                    <p>Total: {{ total_staff }}</p>
                     <a href="{% url 'staff:staff_management' %}" class="btn btn-primary">Manage Staff</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Vehicles</h4>
+                </div>
+                <div class="card-body">
+                    <p>Total: {{ total_vehicles }}</p>
+                    <a href="{% url 'admin:index' %}customers/vehicle/" class="btn btn-primary">View in Admin</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Pending Bookings</h4>
+                </div>
+                <div class="card-body">
+                    <p>Total: {{ pending_bookings }}</p>
+                    <a href="{% url 'staff:booking_management' %}" class="btn btn-primary">Manage Bookings</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Services</h4>
+                </div>
+                <div class="card-body">
+                    <p>Total: {{ total_services }}</p>
+                    <a href="{% url 'staff:service_list' %}" class="btn btn-primary">Manage Services</a>
                 </div>
             </div>
         </div>
@@ -46,26 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Communication</h4>
-                </div>
-                <div class="card-body">
-                    <a href="{% url 'staff:communication_dashboard' %}" class="btn btn-primary">Manage Communication</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Bookings</h4>
-                </div>
-                <div class="card-body">
-                    <a href="{% url 'admin:bookings_booking_changelist' %}" class="btn btn-primary">Manage Bookings</a>
-                </div>
-            </div>
-        </div>
+    </div>
     </div>
     <div class="card shadow">
         <div class="card-header bg-info text-white">
@@ -79,20 +86,18 @@
                             <th>Service</th>
                             <th>Customer</th>
                             <th>Vehicle</th>
-                            <th>Scheduled</th>
+                            <th>Scheduled Date</th>
                             <th>Status</th>
-                            <th>Staff</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for booking in recent_bookings %}
                             <tr>
-                                <td>{{ booking.service.name }}</td>
+                                <td>{{ booking.service.name }}</td>  <!-- Updated -->
                                 <td>{{ booking.customer.get_full_name }}</td>
                                 <td>{{ booking.vehicle }}</td>
-                                <td>{{ booking.scheduled_date|date:"Y-m-d H:i" }}</td>
+                                <td>{{ booking.scheduled_date|date:"F j, Y, g:i a" }}</td>
                                 <td>{{ booking.get_status_display }}</td>
-                                <td>{{ booking.assigned_staff|default:"Unassigned" }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
