@@ -35,7 +35,8 @@ class CustomLogoutView(LogoutView):
     """
     Custom logout view that redirects to the login page after logout.
     """
-    next_page = reverse_lazy('login')
+    http_method_names = ['post']
+    next_page = reverse_lazy('users:login')
 
 
 class UserRegistrationView(CreateView):
@@ -106,7 +107,7 @@ class RoleBasedRedirectView(LoginRequiredMixin, View):
         user = request.user
         if user.is_admin:
             return reverse_lazy('staff:admin_dashboard')
-        elif user.is_staff_member:
+        elif user.is_staff_member:  
             return reverse_lazy('staff:staff_dashboard')
         elif user.is_customer:
             return reverse_lazy('customers:customers_dashboard')

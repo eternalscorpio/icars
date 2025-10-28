@@ -15,7 +15,6 @@ from .views import (
 app_name = 'users'  # Namespace for URL reversing
 
 urlpatterns = [
-    # Authentication URLs
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('register/', UserRegistrationView.as_view(), name='register'),
